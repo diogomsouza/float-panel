@@ -1,0 +1,166 @@
+<main class="demo-shell">
+  <mat-toolbar class="toolbar">
+    <button
+      mat-icon-button
+      type="button"
+      aria-label="Filtros"
+      [floatPanelTriggerFor]="filter"
+    >
+      <mat-icon>filter_list</mat-icon>
+    </button>
+
+    <span class="toolbar-title">Float Panel</span>
+
+    <button mat-button type="button" [floatPanelTriggerFor]="apiPanel">
+      API
+    </button>
+  </mat-toolbar>
+
+  <stagyra-float-panel
+    #filter="floatPanel"
+    xPosition="after"
+    yPosition="below"
+    ariaLabel="Filtros"
+    panelClass="filter-panel-surface"
+  >
+    <form class="filter-panel" [formGroup]="filterForm">
+      <div class="filter-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Mercado</mat-label>
+          <mat-select formControlName="market">
+            @for (market of markets; track market) {
+              <mat-option [value]="market">{{ market }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Submercado</mat-label>
+          <mat-select formControlName="submarket">
+            @for (submarket of submarkets; track submarket) {
+              <mat-option [value]="submarket">{{ submarket }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-row">
+          <mat-label>Ativo</mat-label>
+          <input matInput formControlName="status" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-row">
+          <mat-label>Corretora</mat-label>
+          <mat-select formControlName="broker">
+            @for (broker of brokers; track broker) {
+              <mat-option [value]="broker">{{ broker }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-row">
+          <mat-label>Número</mat-label>
+          <input matInput formControlName="number" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-row">
+          <mat-label>Data Inicial</mat-label>
+          <input matInput [matDatepicker]="startPicker" formControlName="startDate" />
+          <mat-datepicker-toggle matIconSuffix [for]="startPicker" />
+          <mat-datepicker #startPicker />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-row">
+          <mat-label>Data Final</mat-label>
+          <input matInput [matDatepicker]="endPicker" formControlName="endDate" />
+          <mat-datepicker-toggle matIconSuffix [for]="endPicker" />
+          <mat-datepicker #endPicker />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Ordenar Por</mat-label>
+          <mat-select formControlName="orderBy">
+            <mat-option value="date">Data</mat-option>
+            <mat-option value="asset">Ativo</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Ordem</mat-label>
+          <mat-select formControlName="order">
+            <mat-option value="desc">Decrescente</mat-option>
+            <mat-option value="asc">Crescente</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div float-panel-buttons class="filter-actions">
+        <button mat-button type="button" (click)="clearForm()">Limpar</button>
+        <button mat-raised-button color="accent" type="button" (click)="searchclick()">
+          Pesquisar
+        </button>
+      </div>
+    </form>
+  </stagyra-float-panel>
+
+  <stagyra-float-panel
+    #apiPanel="floatPanel"
+    xPosition="before"
+    yPosition="below"
+    ariaLabel="API"
+    panelClass="api-panel-surface"
+  >
+    <div class="api-panel">
+      <button mat-button type="button" (click)="apiPanel.updatePosition()">Reposicionar</button>
+      <button mat-button type="button" (click)="apiPanel.close()">Fechar</button>
+    </div>
+  </stagyra-float-panel>
+
+  <section class="content-band">
+    <div class="summary-row">
+      <div>
+        <span class="metric-label">Resultados</span>
+        <strong>{{ rows.length }}</strong>
+      </div>
+      <div>
+        <span class="metric-label">Offset</span>
+        <strong>1px</strong>
+      </div>
+      <div>
+        <span class="metric-label">Posição</span>
+        <strong>after / below</strong>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table mat-table [dataSource]="rows">
+        <ng-container matColumnDef="market">
+          <th mat-header-cell *matHeaderCellDef>Mercado</th>
+          <td mat-cell *matCellDef="let row">{{ row.market }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="asset">
+          <th mat-header-cell *matHeaderCellDef>Ativo</th>
+          <td mat-cell *matCellDef="let row">{{ row.asset }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="broker">
+          <th mat-header-cell *matHeaderCellDef>Corretora</th>
+          <td mat-cell *matCellDef="let row">{{ row.broker }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let row">{{ row.status }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>Data</th>
+          <td mat-cell *matCellDef="let row">{{ row.date | date: 'dd/MM/yyyy' }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </section>
+</main>

@@ -1,0 +1,35 @@
+{
+  "name": "@stagyra/float-panel",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "Angular floating panel anchored to a trigger with projected content.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diogomsouza/float-panel.git"
+  },
+  "bugs": {
+    "url": "https://github.com/diogomsouza/float-panel/issues"
+  },
+  "homepage": "https://github.com/diogomsouza/float-panel#readme",
+  "keywords": [
+    "angular",
+    "cdk",
+    "overlay",
+    "floating",
+    "panel",
+    "popover",
+    "filter"
+  ],
+  "peerDependencies": {
+    "@angular/cdk": ">=18.0.0 <23.0.0",
+    "@angular/common": ">=18.0.0 <23.0.0",
+    "@angular/core": ">=18.0.0 <23.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false
+}
