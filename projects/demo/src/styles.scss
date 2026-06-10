@@ -1,8 +1,30 @@
 @import '@angular/material/prebuilt-themes/azure-blue.css';
 
+:root {
+  --demo-accent: #0f766e;
+  --demo-accent-strong: #115e59;
+  --demo-accent-soft: #ccfbf1;
+  --demo-border: #d8e1e8;
+  --demo-code: #143642;
+  --demo-code-bg: #edf4f5;
+  --demo-muted: #64727d;
+  --demo-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+  --demo-surface: #ffffff;
+  --demo-surface-strong: #12333d;
+  --demo-text: #21313a;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   min-height: 100%;
   margin: 0;
-  font-family: Roboto, Arial, sans-serif;
+  font-family: Inter, Roboto, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
 }

@@ -1,84 +1,33 @@
-import { DatePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule } from '@angular/material/table';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import {
   FloatPanelButtonsDirective,
   FloatPanelComponent,
   FloatPanelTriggerDirective,
+  FloatPanelXPosition,
+  FloatPanelYPosition,
 } from '@stagyra/float-panel';
 
-interface AssetRow {
-  market: string;
-  submarket: string;
-  asset: string;
-  broker: string;
-  number: string;
-  status: string;
-  date: Date;
+interface ExamplePanel {
+  title: string;
+  note: string;
+  xPosition: FloatPanelXPosition;
+  yPosition: FloatPanelYPosition;
+  icon: string;
+  accent: string;
 }
 
-const DATA: AssetRow[] = [
-  {
-    market: 'Acoes',
-    submarket: 'B3',
-    asset: 'PETR4',
-    broker: 'Rico',
-    number: '1024',
-    status: 'Ativo',
-    date: new Date(2026, 3, 16),
-  },
-  {
-    market: 'Fundos',
-    submarket: 'Imobiliario',
-    asset: 'HGLG11',
-    broker: 'XP',
-    number: '2048',
-    status: 'Ativo',
-    date: new Date(2026, 4, 3),
-  },
-  {
-    market: 'Renda Fixa',
-    submarket: 'Tesouro',
-    asset: 'Tesouro IPCA+',
-    broker: 'Clear',
-    number: '4096',
-    status: 'Inativo',
-    date: new Date(2026, 4, 29),
-  },
-  {
-    market: 'Acoes',
-    submarket: 'BDR',
-    asset: 'AAPL34',
-    broker: 'Rico',
-    number: '8192',
-    status: 'Ativo',
-    date: new Date(2026, 5, 7),
-  },
-];
+interface TokenGroup {
+  label: string;
+  values: string[];
+}
 
 @Component({
   selector: 'app-root',
   imports: [
-    DatePipe,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatDatepickerModule,
-    MatFormFieldModule,
+    FormsModule,
     MatIconModule,
-    MatInputModule,
-    MatNativeDateModule,
-    MatSelectModule,
-    MatTableModule,
-    MatToolbarModule,
     FloatPanelButtonsDirective,
     FloatPanelComponent,
     FloatPanelTriggerDirective,
@@ -87,66 +36,98 @@ const DATA: AssetRow[] = [
   styleUrl: './app.scss',
 })
 export class App {
-  private readonly formBuilder = inject(FormBuilder);
+  protected xPosition: FloatPanelXPosition = 'after';
+  protected yPosition: FloatPanelYPosition = 'below';
+  protected offset = 1;
+  protected copiedCode = '';
 
-  protected readonly displayedColumns = ['market', 'asset', 'broker', 'status', 'date'];
-  protected rows = DATA;
+  protected readonly xPositions: FloatPanelXPosition[] = ['before', 'after'];
+  protected readonly yPositions: FloatPanelYPosition[] = ['above', 'below'];
+  protected readonly offsetOptions = [0, 1, 4, 8, 12, 16];
 
-  protected readonly filterForm = this.formBuilder.group({
-    market: [''],
-    submarket: [''],
-    status: [''],
-    broker: [''],
-    number: [''],
-    startDate: [null as Date | null],
-    endDate: [null as Date | null],
-    orderBy: ['date'],
-    order: ['desc'],
-  });
+  protected readonly examples: ExamplePanel[] = [
+    {
+      title: 'Command palette',
+      note: 'Quick actions near a compact toolbar button.',
+      xPosition: 'after',
+      yPosition: 'below',
+      icon: 'bolt',
+      accent: 'teal',
+    },
+    {
+      title: 'Inspector',
+      note: 'Contextual detail opened above the selected target.',
+      xPosition: 'after',
+      yPosition: 'above',
+      icon: 'analytics',
+      accent: 'blue',
+    },
+    {
+      title: 'User card',
+      note: 'A rich profile preview aligned before the trigger.',
+      xPosition: 'before',
+      yPosition: 'below',
+      icon: 'person',
+      accent: 'violet',
+    },
+    {
+      title: 'Release note',
+      note: 'A compact status panel that closes from its actions.',
+      xPosition: 'before',
+      yPosition: 'above',
+      icon: 'rocket_launch',
+      accent: 'orange',
+    },
+  ];
 
-  protected readonly markets = ['Acoes', 'Fundos', 'Renda Fixa'];
-  protected readonly submarkets = ['B3', 'BDR', 'Imobiliario', 'Tesouro'];
-  protected readonly brokers = ['Clear', 'Rico', 'XP'];
+  protected readonly tokenGroups: TokenGroup[] = [
+    {
+      label: 'Placement',
+      values: ['xPosition', 'yPosition', 'before', 'after', 'above', 'below'],
+    },
+    {
+      label: 'Surface',
+      values: ['offset', 'panelClass', 'role', 'ariaLabel', 'ariaLabelledby'],
+    },
+    {
+      label: 'Lifecycle',
+      values: ['open()', 'close()', 'toggle()', 'updatePosition()', 'isOpen'],
+    },
+    {
+      label: 'Events',
+      values: ['opened', 'closed', 'float-panel-buttons', 'outside click', 'Escape'],
+    },
+  ];
 
-  protected clearForm(): void {
-    this.filterForm.reset({
-      market: '',
-      submarket: '',
-      status: '',
-      broker: '',
-      number: '',
-      startDate: null,
-      endDate: null,
-      orderBy: 'date',
-      order: 'desc',
-    });
-    this.rows = DATA;
+  protected get playgroundCode(): string {
+    return `<button [floatPanelTriggerFor]="panel">Open panel</button>
+
+<stagyra-float-panel
+  #panel="floatPanel"
+  xPosition="${this.xPosition}"
+  yPosition="${this.yPosition}"
+  [offset]="${this.offset}"
+  panelClass="demo-panel"
+>
+  <div>Any projected content</div>
+  <div float-panel-buttons>
+    <button type="button">Done</button>
+  </div>
+</stagyra-float-panel>`;
   }
 
-  protected searchclick(): void {
-    const filters = this.filterForm.getRawValue();
+  protected exampleCode(example: ExamplePanel): string {
+    return `<stagyra-float-panel
+  #panel="floatPanel"
+  xPosition="${example.xPosition}"
+  yPosition="${example.yPosition}"
+>
+  <app-${example.accent}-content />
+</stagyra-float-panel>`;
+  }
 
-    this.rows = DATA.filter((row) => {
-      const afterStart = !filters.startDate || row.date >= filters.startDate;
-      const beforeEnd = !filters.endDate || row.date <= filters.endDate;
-
-      return (
-        (!filters.market || row.market === filters.market) &&
-        (!filters.submarket || row.submarket === filters.submarket) &&
-        (!filters.status || row.status === filters.status) &&
-        (!filters.broker || row.broker === filters.broker) &&
-        (!filters.number || row.number.includes(filters.number)) &&
-        afterStart &&
-        beforeEnd
-      );
-    }).sort((a, b) => {
-      const direction = filters.order === 'asc' ? 1 : -1;
-
-      if (filters.orderBy === 'asset') {
-        return a.asset.localeCompare(b.asset) * direction;
-      }
-
-      return (a.date.getTime() - b.date.getTime()) * direction;
-    });
+  protected copy(value: string): void {
+    this.copiedCode = value;
+    void navigator.clipboard?.writeText(value);
   }
 }

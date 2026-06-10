@@ -18,13 +18,13 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('renders the toolbar title', async () => {
+  it('renders the hero title', async () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     await fixture.whenStable();
 
     const compiled = fixture.nativeElement as HTMLElement;
 
-    expect(compiled.querySelector('.toolbar-title')?.textContent).toContain('Float Panel');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Anchored floating panels');
   });
 });

@@ -1,166 +1,292 @@
-<main class="demo-shell">
-  <mat-toolbar class="toolbar">
-    <button
-      mat-icon-button
-      type="button"
-      aria-label="Filtros"
-      [floatPanelTriggerFor]="filter"
-    >
-      <mat-icon>filter_list</mat-icon>
-    </button>
+<header class="app-header">
+  <nav class="topbar" aria-label="Primary navigation">
+    <a class="brand" href="#playground" aria-label="Float Panel demo home">
+      <span class="brand-mark">FP</span>
+      <span>Float Panel</span>
+    </a>
+    <div class="nav-links">
+      <a href="#playground">Playground</a>
+      <a href="#examples">Examples</a>
+      <a href="#api">API</a>
+      <a href="#publish">Publish</a>
+    </div>
+  </nav>
 
-    <span class="toolbar-title">Float Panel</span>
-
-    <button mat-button type="button" [floatPanelTriggerFor]="apiPanel">
-      API
-    </button>
-  </mat-toolbar>
-
-  <stagyra-float-panel
-    #filter="floatPanel"
-    xPosition="after"
-    yPosition="below"
-    ariaLabel="Filtros"
-    panelClass="filter-panel-surface"
-  >
-    <form class="filter-panel" [formGroup]="filterForm">
-      <div class="filter-grid">
-        <mat-form-field appearance="outline">
-          <mat-label>Mercado</mat-label>
-          <mat-select formControlName="market">
-            @for (market of markets; track market) {
-              <mat-option [value]="market">{{ market }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Submercado</mat-label>
-          <mat-select formControlName="submarket">
-            @for (submarket of submarkets; track submarket) {
-              <mat-option [value]="submarket">{{ submarket }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-row">
-          <mat-label>Ativo</mat-label>
-          <input matInput formControlName="status" />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-row">
-          <mat-label>Corretora</mat-label>
-          <mat-select formControlName="broker">
-            @for (broker of brokers; track broker) {
-              <mat-option [value]="broker">{{ broker }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-row">
-          <mat-label>Número</mat-label>
-          <input matInput formControlName="number" />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-row">
-          <mat-label>Data Inicial</mat-label>
-          <input matInput [matDatepicker]="startPicker" formControlName="startDate" />
-          <mat-datepicker-toggle matIconSuffix [for]="startPicker" />
-          <mat-datepicker #startPicker />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-row">
-          <mat-label>Data Final</mat-label>
-          <input matInput [matDatepicker]="endPicker" formControlName="endDate" />
-          <mat-datepicker-toggle matIconSuffix [for]="endPicker" />
-          <mat-datepicker #endPicker />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Ordenar Por</mat-label>
-          <mat-select formControlName="orderBy">
-            <mat-option value="date">Data</mat-option>
-            <mat-option value="asset">Ativo</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Ordem</mat-label>
-          <mat-select formControlName="order">
-            <mat-option value="desc">Decrescente</mat-option>
-            <mat-option value="asc">Crescente</mat-option>
-          </mat-select>
-        </mat-form-field>
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">&#64;stagyra/float-panel</p>
+      <h1>Anchored floating panels for Angular apps.</h1>
+      <p class="hero-text">
+        A small CDK Overlay package for trigger-based panels with projected content,
+        fallback positioning, outside-click close, and action regions.
+      </p>
+      <div class="hero-actions">
+        <a class="button primary" href="#playground">Open playground</a>
+        <a class="button secondary" href="https://github.com/diogomsouza/float-panel" target="_blank" rel="noreferrer">GitHub</a>
       </div>
+    </div>
 
-      <div float-panel-buttons class="filter-actions">
-        <button mat-button type="button" (click)="clearForm()">Limpar</button>
-        <button mat-raised-button color="accent" type="button" (click)="searchclick()">
-          Pesquisar
+    <div class="hero-board">
+      <div class="browser-top">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="mock-workspace">
+        <button class="mock-trigger top-left" type="button" [floatPanelTriggerFor]="heroA">
+          <mat-icon>tune</mat-icon>
         </button>
-      </div>
-    </form>
-  </stagyra-float-panel>
+        <button class="mock-trigger top-right" type="button" [floatPanelTriggerFor]="heroB">
+          <mat-icon>notifications</mat-icon>
+        </button>
+        <button class="mock-trigger bottom-left" type="button" [floatPanelTriggerFor]="heroC">
+          <mat-icon>person</mat-icon>
+        </button>
 
-  <stagyra-float-panel
-    #apiPanel="floatPanel"
-    xPosition="before"
-    yPosition="below"
-    ariaLabel="API"
-    panelClass="api-panel-surface"
-  >
-    <div class="api-panel">
-      <button mat-button type="button" (click)="apiPanel.updatePosition()">Reposicionar</button>
-      <button mat-button type="button" (click)="apiPanel.close()">Fechar</button>
-    </div>
-  </stagyra-float-panel>
-
-  <section class="content-band">
-    <div class="summary-row">
-      <div>
-        <span class="metric-label">Resultados</span>
-        <strong>{{ rows.length }}</strong>
-      </div>
-      <div>
-        <span class="metric-label">Offset</span>
-        <strong>1px</strong>
-      </div>
-      <div>
-        <span class="metric-label">Posição</span>
-        <strong>after / below</strong>
+        <div class="mock-grid">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
       </div>
     </div>
+  </section>
+</header>
 
-    <div class="table-wrap">
-      <table mat-table [dataSource]="rows">
-        <ng-container matColumnDef="market">
-          <th mat-header-cell *matHeaderCellDef>Mercado</th>
-          <td mat-cell *matCellDef="let row">{{ row.market }}</td>
-        </ng-container>
+<stagyra-float-panel #heroA="floatPanel" xPosition="after" yPosition="below" panelClass="mini-panel">
+  <div class="mini-content teal">
+    <strong>Filters</strong>
+    <span>Market, date range, status</span>
+  </div>
+</stagyra-float-panel>
 
-        <ng-container matColumnDef="asset">
-          <th mat-header-cell *matHeaderCellDef>Ativo</th>
-          <td mat-cell *matCellDef="let row">{{ row.asset }}</td>
-        </ng-container>
+<stagyra-float-panel #heroB="floatPanel" xPosition="before" yPosition="below" panelClass="mini-panel">
+  <div class="mini-content blue">
+    <strong>Deploy ready</strong>
+    <span>Demo published on GitHub Pages</span>
+  </div>
+</stagyra-float-panel>
 
-        <ng-container matColumnDef="broker">
-          <th mat-header-cell *matHeaderCellDef>Corretora</th>
-          <td mat-cell *matCellDef="let row">{{ row.broker }}</td>
-        </ng-container>
+<stagyra-float-panel #heroC="floatPanel" xPosition="after" yPosition="above" panelClass="mini-panel">
+  <div class="mini-content violet">
+    <strong>Accessible</strong>
+    <span>ARIA region, Escape, keyboard trigger</span>
+  </div>
+</stagyra-float-panel>
 
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef>Status</th>
-          <td mat-cell *matCellDef="let row">{{ row.status }}</td>
-        </ng-container>
+<main>
+  <section id="playground" class="section">
+    <div class="section-heading">
+      <p class="eyebrow">Live playground</p>
+      <h2>Change the inputs and open the panel.</h2>
+    </div>
 
-        <ng-container matColumnDef="date">
-          <th mat-header-cell *matHeaderCellDef>Data</th>
-          <td mat-cell *matCellDef="let row">{{ row.date | date: 'dd/MM/yyyy' }}</td>
-        </ng-container>
+    <div class="playground-shell">
+      <form class="controls">
+        <label>
+          X position
+          <select [(ngModel)]="xPosition" name="xPosition">
+            @for (option of xPositions; track option) {
+              <option [value]="option">{{ option }}</option>
+            }
+          </select>
+        </label>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
+        <label>
+          Y position
+          <select [(ngModel)]="yPosition" name="yPosition">
+            @for (option of yPositions; track option) {
+              <option [value]="option">{{ option }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          Offset
+          <select [(ngModel)]="offset" name="offset">
+            @for (option of offsetOptions; track option) {
+              <option [ngValue]="option">{{ option }}px</option>
+            }
+          </select>
+        </label>
+
+        <div class="control-note">
+          The panel follows content size, pushes through fallback positions, and closes on outside click or button-region clicks.
+        </div>
+      </form>
+
+      <div class="preview-panel">
+        <div class="stage">
+          <div class="stage-grid">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <button class="preview-trigger" type="button" [floatPanelTriggerFor]="playgroundPanel">
+            <mat-icon>auto_awesome</mat-icon>
+            Open {{ xPosition }} / {{ yPosition }}
+          </button>
+
+          <stagyra-float-panel
+            #playgroundPanel="floatPanel"
+            [xPosition]="xPosition"
+            [yPosition]="yPosition"
+            [offset]="offset"
+            ariaLabel="Playground panel"
+            panelClass="playground-float-panel"
+          >
+            <div class="panel-hero">
+              <div class="signal-mark">
+                <mat-icon>show_chart</mat-icon>
+              </div>
+              <div>
+                <p class="panel-kicker">Market signal</p>
+                <h3>Momentum improving</h3>
+                <p>Three tracked indicators moved into the target band this week.</p>
+              </div>
+            </div>
+
+            <div class="metric-strip">
+              <div>
+                <span>Confidence</span>
+                <strong>92%</strong>
+              </div>
+              <div>
+                <span>Latency</span>
+                <strong>18ms</strong>
+              </div>
+              <div>
+                <span>Items</span>
+                <strong>248</strong>
+              </div>
+            </div>
+
+            <div class="task-list">
+              <span><mat-icon>check_circle</mat-icon> CDK Overlay positioning</span>
+              <span><mat-icon>check_circle</mat-icon> Lazy projected content</span>
+              <span><mat-icon>check_circle</mat-icon> Button-region close</span>
+            </div>
+
+            <div float-panel-buttons class="panel-actions">
+              <button type="button" class="ghost">Dismiss</button>
+              <button type="button" class="solid">Apply insight</button>
+            </div>
+          </stagyra-float-panel>
+        </div>
+
+        <div class="code-card">
+          <button type="button" (click)="copy(playgroundCode)">{{ copiedCode === playgroundCode ? 'Copied' : 'Copy' }}</button>
+          <pre><code>{{ playgroundCode }}</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="examples" class="section examples-section">
+    <div class="section-heading">
+      <p class="eyebrow">Position patterns</p>
+      <h2>Open a panel in every direction.</h2>
+    </div>
+
+    <div class="example-grid">
+      @for (example of examples; track example.title) {
+        <article
+          class="example-card"
+          [class.teal]="example.accent === 'teal'"
+          [class.blue]="example.accent === 'blue'"
+          [class.violet]="example.accent === 'violet'"
+          [class.orange]="example.accent === 'orange'"
+        >
+          <div class="example-header">
+            <span class="example-icon"><mat-icon>{{ example.icon }}</mat-icon></span>
+            <div>
+              <h3>{{ example.title }}</h3>
+              <p>{{ example.note }}</p>
+            </div>
+          </div>
+
+          <button class="button secondary" type="button" [floatPanelTriggerFor]="examplePanel">
+            Open {{ example.xPosition }} / {{ example.yPosition }}
+          </button>
+
+          <stagyra-float-panel
+            #examplePanel="floatPanel"
+            [xPosition]="example.xPosition"
+            [yPosition]="example.yPosition"
+            [offset]="8"
+            [ariaLabel]="example.title"
+            panelClass="example-float-panel"
+          >
+            <div
+              class="example-panel-content"
+              [class.teal]="example.accent === 'teal'"
+              [class.blue]="example.accent === 'blue'"
+              [class.violet]="example.accent === 'violet'"
+              [class.orange]="example.accent === 'orange'"
+            >
+              <div class="example-panel-top">
+                <span class="example-icon"><mat-icon>{{ example.icon }}</mat-icon></span>
+                <div>
+                  <p class="panel-kicker">{{ example.xPosition }} / {{ example.yPosition }}</p>
+                  <h3>{{ example.title }}</h3>
+                </div>
+              </div>
+              <p>{{ example.note }} The projected content can be a profile, notification center, settings form, or command list.</p>
+              <div class="chips">
+                <span>lazy</span>
+                <span>fallback</span>
+                <span>outside click</span>
+              </div>
+              <div float-panel-buttons class="panel-actions compact-actions">
+                <button type="button" class="solid">Close from action</button>
+              </div>
+            </div>
+          </stagyra-float-panel>
+
+          <div class="code-card compact">
+            <button type="button" (click)="copy(exampleCode(example))">{{ copiedCode === exampleCode(example) ? 'Copied' : 'Copy' }}</button>
+            <pre><code>{{ exampleCode(example) }}</code></pre>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section id="api" class="section">
+    <div class="section-heading">
+      <p class="eyebrow">Component API</p>
+      <h2>Small surface, useful behavior.</h2>
+    </div>
+
+    <div class="token-grid">
+      @for (group of tokenGroups; track group.label) {
+        <article class="token-card">
+          <h3>{{ group.label }}</h3>
+          <div class="token-list">
+            @for (value of group.values; track value) {
+              <code>{{ value }}</code>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section id="publish" class="section publish-section">
+    <div>
+      <p class="eyebrow">NPM package</p>
+      <h2>Ready for manual publication.</h2>
+    </div>
+    <div class="publish-grid">
+      <pre><code>npm run build:lib
+cd dist/float-panel
+npm publish --access public</code></pre>
+      <pre><code>npm install &#64;stagyra/float-panel &#64;angular/cdk
+
+import &#123; FloatPanelComponent &#125; from '&#64;stagyra/float-panel';</code></pre>
     </div>
   </section>
 </main>
