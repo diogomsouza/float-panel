@@ -2,6 +2,8 @@
 
 Angular floating panel anchored to a trigger, published as `@stagyra/float-panel`.
 
+Demo: https://diogomsouza.github.io/float-panel/
+
 The package provides a content-only surface. Buttons, forms, lists, and other controls are projected by the consuming app.
 
 ## Install
